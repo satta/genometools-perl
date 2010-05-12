@@ -1,0 +1,21 @@
+This directory contains the GenomeTools Perl bindings.
+
+To be able to use GenomeTools classes via Perl, you have to 'use' a module for
+each class in your Perl script:
+
+use GT;                           # always required
+use GT::Core::Str;                # to use the 'Str' class
+use GT::Core::Encseq;             # to use the 'Encseq' class
+[...]
+
+Also, make sure that this directory is added to the Perl module search path.
+Either by calling ruby with the option -I or by adding this directory to the
+PERLLIB or PERL5LIB environment variables.
+
+Furthermore, you have to make sure that the GenomeTools shared libraries can be
+be found by the dlopen(3) system call. For example, by adding the lib/
+subdirectory of GenomeTools to your LD_LIBRARY_PATH environment variable.
+
+Finally, the bindings require that the C::DynaLib foreign function interface
+is installed, which can be done via CPAN (see
+http://search.cpan.org/~rurban/C-DynaLib-0.60/lib/C/DynaLib.pm).
