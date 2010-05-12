@@ -20,8 +20,6 @@ use GT;
 use C::DynaLib;
 use sigtrap;
 use Time::HiRes;
-use Tie::CArray;
-
 
 package GT::Core::Encseq;
 $gt_encseq_ref = GT->libgt->DeclareSub("gt_encseq_ref", C::DynaLib::PTR_TYPE,
@@ -51,7 +49,8 @@ $gt_encseq_seqstartpos = GT->libgt->DeclareSub("gt_encseq_seqstartpos", "L",
                                                C::DynaLib::PTR_TYPE, "L");
 $gt_encseq_description = GT->libgt->DeclareSub("gt_encseq_description",
                                                C::DynaLib::PTR_TYPE,
-                                               C::DynaLib::PTR_TYPE, C::DynaLib::PTR_TYPE, "L");
+                                               C::DynaLib::PTR_TYPE,
+                                               C::DynaLib::PTR_TYPE, "L");
 $gt_encseq_create_reader_with_readmode = GT->libgt->DeclareSub(
                                         "gt_encseq_create_reader_with_readmode",
                                         C::DynaLib::PTR_TYPE,
@@ -139,7 +138,7 @@ sub seq_encoded {
                                     $inseqstart + $endpos);
     # the next line is a major performance bottleneck!
     my @retval = unpack("C".($endpos-$startpos+1), $memory);
-    return $memory;#@retval;
+    return \@retval;
 }
 
 sub seq_decoded {
@@ -154,9 +153,8 @@ sub seq_decoded {
                                   $ptr,
                                   $inseqstart + $startpos,
                                   $inseqstart + $endpos);
-    # the next line is a major performance bottleneck!
-    my @retval = unpack("P23", $memory);
-    return join(@retval);#@retval;
+    my ($str) = unpack("P".($endpos-$startpos+1), pack("L!", $ptr));
+    return $str;#@retval;
 }
 
 sub create_reader_with_readmode {
